@@ -1,0 +1,854 @@
+from random import randint
+import sys
+#"Actual Cannibal Shia LeBouf" text-based game
+#11 Sept 2015 Matt P.
+#Lyrics to "Shia LeBouf" by Rob Cantor
+
+#Initialize master while loop
+running_for_your_life_from_shia_lebouf = True
+while running_for_your_life_from_shia_lebouf == True:
+    
+    raw_input(">>> Press enter to continue... <<<")
+    
+    print "You're walking in the woods,"
+    print "There's no one around and your phone is dead."
+    print "Out of the corner of your eye you spot him: "
+    
+    print "+-------------------------------------+"
+    print "|    (ACTUAL CANNIBAL) SHIA LaBEOUF   |"
+    print "+-------------------------------------+"
+    
+    raw_input(">>> Press enter to continue... <<<")
+    
+    #Do you need to learn how to play?
+    ans1r = True
+    while ans1r:
+        print "+-------------------------------------+"
+        print "Do you need to learn how to play?"
+        ans1 = raw_input("(YES/NO)").lower()
+        if ans1 == "yes":
+            #Explains how to play
+            print "+-------------------------------------+"
+            print "Here's how you play: "
+            print "You must suvive in the woods against Hollywood superstar Shia LaBeouf."
+            print "Use whatever text-based means necessary to survive."
+            print "You will be given a list of available commands upon request."
+            raw_input(">>> Press enter to continue... <<<")
+            break
+        elif ans1 == "no":
+            break
+        else:
+            print "Error: invalid input. Try again."
+            
+    #Do you need to learn available commands?
+    ans2r = True
+    while ans2r:
+        print "+-------------------------------------+"
+        print "Do you need to learn your available FREE RESPONSE commands?"
+        ans2 = raw_input("(YES/NO)").lower()
+        if ans2 == 'yes':
+            #Lists available commands
+            print "+-------------------------------------+"
+            print "Here is your available list of commands when you are alotted the prompt FREE RESPONSE: "
+            print ""
+            print "(1) PROGRESS: type 'PROGRESS' to progress the game's story and move to a new location."
+            print "(2) CHECK HEALTH: type 'CHECK HEALTH' to display your health status."
+            print "(3) CHECK BAG: type 'CHECK BAG' to display your inventory status."
+            print "(4) DROP ITEM: type 'DROP ITEM' to drop an item from your bag. Drops copies as well."
+            print "(5) REST: type 'REST' to regain some health. Watch out! There is a slight chance Shia LaBeouf will catch you."
+            print "(6) SCOUT: type 'SCOUT' to show the distane between you and Shia LaBeouf in meters."
+            print "(7) SPRINT: type 'SPRINT' to start sprinting away. You'll get further from Shia LaBeouf, however, you'll lose some of your health. Moves to new location. One time use only."
+            print "(8) COMMANDS: type 'COMMANDS' to display available FREE RESPONSE commands."
+            print ""
+            raw_input(">>> Press enter to continue... <<<")
+            break
+        elif ans2 == 'no':
+            break
+        else:
+            print ""
+            print "Error: invalid input. Try again."
+            
+    #Enter your credentials here
+    print "+-------------------------------------+"
+    print "Please enter your first name: "
+    first_name = raw_input("->")
+    print "Please enter your last name: "
+    last_name = raw_input("->")
+    diff = True
+    while diff:
+        print "What difficult would you like to play on?"
+        diff_choice = raw_input("(EASY/NORMAL/HARD)").lower()
+        if diff_choice == 'easy':
+            distance = 250
+            break
+        elif diff_choice == 'normal':
+            distance = 175
+            break
+        elif diff_choice == 'hard':
+            distance = 100
+            break
+        else:
+            print "Error: invalid input. Please choose easy, normal or hard."
+    
+    #Final check to be ready for game
+    print "+-------------------------------------+"
+    print "Make sure you're ready, " + str(first_name) + "..."
+    print "...for Hollywood superstar Shia LaBeouf."
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "Are you ready to take on Hollywood superstar Shia LaBeouf, " + str(first_name) + "?"
+    print "This is your final chance to walk away."
+    print "If you are ready..."
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "Initialzing game functions and variables..."
+    print "+-------------------------------------+"
+    
+    #Game variables go here
+    first_name = first_name
+    last_name = last_name 
+    inventory = {
+        'phone': 1,
+        'small wallet': 1
+        }
+    max_health = 5
+    current_health = 5
+    status_updates = {
+        5: "Don't worry: you are healthy.",
+        4: "Don't worry: you are healthy.",
+        3: "Begin paying attention to your well-being.",
+        2: "Be more carfeul from now on.",
+        1: "Danger: very low health. Please replenish."
+        }
+    woods_zones = {
+        0: 'underbrush',
+        1: 'rocks',
+        2: 'river',
+        3: 'stone trail',
+        4: 'dirt trail',
+        5: 'dense ticket',
+        6: 'quicksand',
+        7: 'beartrap',
+        8: 'perfect hiding place',
+        9: 'decent hiding place',
+        10: 'predictable hiding place',
+        11: 'house with electricity',
+        12: 'rickety shack',
+        13: 'hill',
+        14: 'small cottage',
+        15: 'small wallet',
+        16: 'large wallet',
+        17: 'dagger',
+        18: 'gun',
+        19: 'axe',
+        20: 'mall photo',
+        21: 'first aid kit',
+        22: 'bandage'
+        }
+    stamina = 'full'
+    path = 100
+    phone_battery = 0
+        
+    #Game functions go here
+    def explain_death(reason):
+        print "Your mistake: " + reason
+    
+    def game_over():
+        global running_for_your_life_from_shia_lebouf
+        print "                 GAME OVER          "
+        print "Please try again and make new choices as it alters the story and outcomes"
+        running_for_your_life_from_shia_lebouf = False
+        sys.exit(0)
+        
+    def notice(notification):
+        print "+~~~~~~~+"
+        print "|NOTICE!|"
+        print "+~~~~~~~+"
+        print notification
+    
+    def has_item(item):
+        for i in inventory:
+            if i == item:
+                return True
+        else:
+            return False
+    
+    def add_to_inventory(item, amount):
+        if has_item(item):
+            inventory[item] += amount
+        else:
+            inventory[item] = amount
+        print str(item) + " (x" + str(amount) + ")"
+    
+    def remove_from_inventory(item, amount):
+        inventory[item] -= amount
+        if inventory[item] == 0:
+            del inventory[item]
+        
+    def display_distance():
+        print "+-------------------------------------+"
+        if distance < 500:
+            if distance < 0:
+                distance = 0
+            print "Actual Cannibal Shia LaBeouf is " + str(distance) + " meters away!"
+        elif distance < 750:
+            section1 = distance - (randint(0,5) * 10)
+            section2 = distance + (randint(0,5) * 10)
+            print "It's too far to clarify exactly how far Shia is away; he could be anywhere from " + str(section1) + " meters to " + str(section2) + " meters away."
+        else:
+            section1 = distance - (randint(0,5) * 50)
+            section2 = distance + (randint(0,5) * 50)
+            print "It's much too far to clarify exactly how far Shia is away; he could be anywhere from " + str(section1) + " meters to " + str(section2) + " meters away."
+        print "+-------------------------------------+"
+        
+    def display_inventory():
+        print "+-------------------------------------+"
+        print "======================="
+        print "{  I N V E N T O R Y  }"
+        print "======================="
+        for i in inventory:
+            temp_num = 18 - len(i)
+            temp_spc = ""
+            for j in range(temp_num):
+                temp_spc += "."
+            print "* " + i.upper() + temp_spc + str(inventory[i]) 
+        print "======================="
+        print "+-------------------------------------+"
+        
+    
+    def display_health(current, maximum):
+        print "+-------------------------------------+"
+        temp_len = len(first_name) + len(last_name)
+        temp_dash = ""
+        dashes = []
+        for i in range(temp_len + 20):
+            dashes.append('+')
+        for j in dashes:
+            temp_dash += "".join(j)
+        print temp_dash
+        print str(first_name) + " " + str(last_name) + "'s Health: " + str(current) + "HP /" + str(maximum) + "HP"
+        print temp_dash
+        print "Status Update: " + status_updates[current]
+        print "+-------------------------------------+"
+    
+    def shia_attack():
+        global current_health
+        print "+-------------------------------------+"
+        print "Shia attacks!"
+        
+        print "What will you use to defend yourself?"
+        defending = True
+        while defending:
+            if len(inventory) > 0:
+                defense = raw_input("([ITEM NAME] or CHECK BAG)")
+                if defense == 'small wallet' and has_item('small wallet'):
+                    print "+-------------------------------------+"
+                    print "You throw a small wallet at Shia LaBeouf! It's not much, but it distracts him a little. Shia damages you heavily before you attempt to escape."
+                    current_health -= 3
+                    remove_from_inventory('small wallet', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                    break
+                elif defense == 'large wallet' and has_item('large wallet'):
+                    print "+-------------------------------------+"
+                    print "You throw a large wallet at Shia LaBeouf! It's not much, but it distracts him a little. Shia damages you heavily before you attempt to escape."
+                    current_health -= 3
+                    remove_from_inventory('large wallet', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                    break
+                elif defense == 'phone' and has_item('phone'):
+                    print "+-------------------------------------+"
+                    print "You throw your phone at Shia LaBeouf! It's not much, but it distracts him a little. Shia damages you heavily before you attempt to escape."
+                    current_health -= 3
+                    remove_from_inventory('phone', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                    break
+                elif defense == 'dagger' and has_item('dagger'):
+                    print "+-------------------------------------+"
+                    print "You defend yourself with a dagger! The weapon sticks into Shia's blood-ridden, hairy chest and you attempt to escape."
+                    current_health -= 1
+                    remove_from_inventory('dagger', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                    break
+                elif defense == 'gun' and has_item('gun'):
+                    print "+-------------------------------------+"
+                    hit = randint(0, 1)
+                    print "You defend yourself with a gun!"
+                    if hit == 1:
+                        print "You succesfully hit Shia and escape without a scratch. Watch out: now he's angry!"
+                    else:
+                        current_health -= 2
+                        print "You missed! Shia slashes at you with his freakishly long nails and damages you before your escape is attempted."
+                    remove_from_inventory('dagger', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                elif defense == "axe" and has_item('axe'):
+                    print "+-------------------------------------+"
+                    print "You defend yourself with an axe! The weapon sticks into Shia's blood-ridden, hairy chest and you escape, no damage taken."
+                    remove_from_inventory('axe', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                    break
+                elif defense == "mall photo" and has_item('mal photo'):
+                    print "+-------------------------------------+"
+                    hit = randint(0, 4)
+                    print "You show Shia LaBeouf a picture of a populous shopping mall."
+                    if hit == 0:
+                        print "Shia LaBeouf pauses and collects himself at the sight of the picture. He realizes you are no prize in comparison to the hundreds of people in the photograph. He gets on all fours and scurries away into the night, a new prize on his mind..."
+                    else:
+                        current_health -= 4
+                        print "Shia LaBeouf doesn't notice the photograph and hacks away at you. You would be lucky to survive this attack as you scamper away."
+                    remove_from_inventory('mall photo', 1)
+                    raw_input(">>> Press enter to continue... <<<")
+                    break
+                elif defense == 'check bag':
+                    display_inventory()
+                else:
+                    print "Error: invalid input. That item does not exist, or is not currently in your inventory."
+            else:
+                print "+-------------------------------------+"
+                print "You don't have anything to defend yourself with..."
+                print "Shia eliminates you!"
+                explain_death("You had nothing to defend yourself with!")
+                game_over()
+                break
+            if current_health <= 0:
+                current_health = 0
+                print "+-------------------------------------+"
+                print "You have run out of health. There is blood everywhere."
+                print "Eating all the bodies:"
+                print "Actual Cannibal Shia Labeouf!"
+                explain_death("You ran out of health.")
+                game_over()
+    
+    def event_handler():
+        global distance
+        global current_health
+        global path
+        global phone_battery
+        #############################################################
+        if len(inventory) > 3:
+            notice('Your bag is too heavy! The weight is causing Shia LaBeouf to gain on you!')
+            distance -= 60
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        path = randint(11, 13)
+        #############################################################
+        if path == 0:
+            print "+-------------------------------------+"
+            print "You creep quietly through the underbrush. Shia does not notice you and you gain a little ground on him."
+            distance += 70
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 1:
+            print "+-------------------------------------+"
+            print "You slink silently around Shia LaBeouf while hiding behind some boulders and you gain a little ground on him."
+            distance += 70
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 2:
+            print "+-------------------------------------+"
+            print "You encounter a rapid river. You decide it's time for a swim, and the fast-moving current takes you further away from Shia LaBeouf."
+            distance += 130
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 3:
+            print "+-------------------------------------+"
+            print "You follow a stone path. You don't know where it leads, but it should allow you to gain a little ground on Shia LaBeouf."
+            distance += randint(5, 10) * 10
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 4:
+            print "+-------------------------------------+"
+            print "You follow a dirt path. You don't know where it leads, but it should allow you to gain a little ground on Shia LaBeouf."
+            distance += randint(6, 12) * 10
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 5:
+            print "+-------------------------------------+"
+            print "You are faced with a dense thicket. The prickly thorns look menacing and dangerous. Will you tread through the harmful weeds, or spend time finding a way around?"
+            thick = True
+            while thick:
+                entry = raw_input("(THROUGH/AROUND)").lower()
+                if entry == 'through':
+                    print "+-------------------------------------+"
+                    print "You go through the sharp, painful thorns. They hurt a little - at least you don't lose any ground!"
+                    current_health -= 1
+                    print "+-------------------------------------+"
+                    break
+                    break
+                elif entry == 'around':
+                    print "+-------------------------------------+"
+                    print "You find a way around the prickly thorns. You retain your health, but you allow Shia LaBeouf to get even closer to you..."
+                    distance -= 85
+                    print "+-------------------------------------+"
+                    break
+                else:
+                    print "Error: invalid input. Try again."
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 6:
+            print "+-------------------------------------+"
+            print "Oh no! You are caught in quicksand. This causes a delay in your escape, and Shia LaBeouf is on his way. You escape just in time."
+            distance = 60
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 7:
+            print "+-------------------------------------+"
+            print "Your leg (AH)! It's caught in a bear trap! How terrible! The trap causes you harm and slows you down."
+            distance -= 40
+            current_health -= 1
+            print "+-------------------------------------+"
+            raw_input(">>> Press enter to continue... <<<")
+        #############################################################
+        elif path == 8:
+            print "+-------------------------------------+"
+            print "You come across a perfect hiding place, a climbing tree with many leaves. Shia may not find you quickly here."
+            count = 9;
+            entryr = True
+            while entryr:
+                print "Will you stay here longer or pass through?"
+                entry = raw_input("(STAY/PASS)").lower()
+                if entry == 'stay':
+                    found = randint(0, count)
+                    if found == 0:
+                        print "+-------------------------------------+"
+                        print "Shia found you in the tree! Oh, your luck!"
+                        shia_attack()
+                        break
+                    else:
+                        distance += (3 * count)
+                        count -= 1
+                elif entry == 'pass':
+                    break
+                else:
+                    print "Error: invalid input. Try again."
+            print "+-------------------------------------+"
+        #############################################################
+        elif path == 9:
+            print "+-------------------------------------+"
+            print "You come across a decent hiding place, a deep rut in the ground at the base of an old tree."
+            count = 6;
+            entryr = True
+            while entryr:
+                print "Will you stay here longer or pass through?"
+                entry = raw_input("(STAY/PASS)").lower()
+                if entry == 'stay':
+                    found = randint(0, count)
+                    if found == 0:
+                        print "+-------------------------------------+"
+                        print "Shia found you in the rut! Oh, your luck!"
+                        shia_attack()
+                        break
+                    else:
+                        distance += (4 * count)
+                        count -= 1
+                elif entry == 'pass':
+                    break
+                else:
+                    print "Error: invalid input. Try again."
+            print "+-------------------------------------+"
+        ##############################################################
+        elif path == 10:
+            print "+-------------------------------------+"
+            print "You come across a rather predictable hiding place, an outhouse with a motion-sensor light installed in it."
+            count = 4;
+            entryr = True
+            while entryr:
+                print "Will you stay here longer or pass through?"
+                entry = raw_input("(STAY/PASS)").lower()
+                if entry == 'stay':
+                    found = randint(0, count)
+                    if found == 0:
+                        print "+-------------------------------------+"
+                        print "Shia found you in the outhouse! Oh, your luck!"
+                        shia_attack()
+                        break
+                    else:
+                        distance += (5 * count)
+                        count -= 1
+                elif entry == 'pass':
+                    break
+                else:
+                    print "Error: invalid input. Try again."
+            print "+-------------------------------------+"
+        ##############################################################
+        elif path == 11:
+            global phone_battery
+            print "+-------------------------------------+"
+            print "You oddly discover a house with electricity running..."
+            raw_input(">>> Press enter to continue... <<<")
+            if has_item('phone'):
+                chg = True
+                while chg and phone_battery < 100 and distance > 0:
+                    print "+-------------------------------------+"
+                    print "You may charge your phone here, but the more you do, the closer *he* will get to you. What will you do?"
+                    entry = raw_input ("(CHARGE/IGNORE)").lower()
+                    if entry == 'charge':
+                        if phone_battery <= 80:
+                            print "Phone battery: +20%"
+                            phone_battery += 20
+                            print "Currently at " + str(phone_battery) + "%"
+                            
+                        else:
+                            pb = (100 - phone_battery)
+                            print "Phone battery: +" + str(pb) + "%"
+                            phone_battery += pb
+                            print "Currently at 100%"
+                        raw_input(">>> Press enter to continue... <<<")
+                        distance -= 80
+                    elif entry == 'ignore':
+                        break
+                    else:
+                        print "Error: invalid input. Try again."
+            print "+-------------------------------------+"
+        ##############################################################
+        elif path == 12:
+            print "+-------------------------------------+"
+            print "You come across a rickety old shack. It has floorboards torn up and missing, and picture framses hanging askew on the walls."
+            rick = True
+            while rick:
+                print "+-------------------------------------+"
+                print "Will you explore the shack?"
+                entry = raw_input("(EXPLORE/LEAVE)").lower()
+                if entry == 'explore':
+                    num = randint(0, 3)
+                    if num == 0:
+                        print "+-------------------------------------+"
+                        print "You choose to explore the shack. You're exploring the foyeur when suddenly a floorboard snaps under your feet, and you fall through. You are never seen again - but at least Hollywood superstar Shia LaBeouf never sees you again..."
+                        raw_input(">>> Press enter to continue... <<<")
+                        print "+-------------------------------------+"
+                        explain_death("You weren't careful enough while exploring the rickety shack.")
+                        game_over()
+                    elif num == 1:
+                        print "+-------------------------------------+"
+                        print "You choose to explore the shack. You wander into a dark room. Suddenly - you can't move? Your bag becomes stuck on a nail sticking out of the wall! You know Shia is on his way. Will you abandon your inventory?"
+                        while rick:
+                            entry = raw_input("(ABANDON/KEEP)").lower()
+                            if entry == 'abandon':
+                                inventory.clear()
+                                print "+-------------------------------------+"
+                                print "You left your items behind..."
+                                raw_input(">>> Press enter to continue... <<<")
+                                print "+-------------------------------------+"
+                                break
+                            elif entry == 'keep':
+                                print "+-------------------------------------+"
+                                print "You struggle to take your items with you. After a long operation, you rip the bag away. You can't help feeling that Shia is close..."
+                                raw_input(">>> Press enter to continue... <<<")
+                                print "+-------------------------------------+"
+                                distance -= 350
+                                break
+                            else:
+                                print "Error: invalid input. Try again."
+                        break
+                    elif num == 2:
+                        print "+-------------------------------------+"
+                        print "You choose to explore the shack. In the run-down living room, you pick up an axe near the fireplace. It was probably used to chop kindling."
+                        print "+-------------------------------------+"
+                        raw_input(">>> Press enter to continue... <<<")
+                        notice("Axe has been added to your inventory.")
+                        add_to_inventory('axe', 1);
+                        raw_input(">>> Press enter to continue... <<<")
+                        print "+-------------------------------------+"
+                        break
+                    elif num == 3:
+                        print "+-------------------------------------+"
+                        print "You choose to explore the shack. While exploring a dusty bedroom, you notice a photo on the dresser. The photo depicts a middle-aged couple in a crowded mall. You keep the photo."
+                        print "+-------------------------------------+"
+                        raw_input(">>> Press enter to continue... <<<")
+                        notice("Mall photo has been added to your inventory.")
+                        add_to_inventory('mall photo', 1)
+                        raw_input(">>> Press enter to continue... <<<")
+                        print "+-------------------------------------+"
+                        break
+                elif entry == 'leave':
+                    print "+-------------------------------------+"
+                    break
+                else:
+                    print "Error: invalid input. Try again"
+        ###############################################################
+        elif path == 13:
+            print "+-------------------------------------+"
+            print "You come across a small clearing on a hill. You see a cell tower in the distance."
+            raw_input(">>> Press enter to continue... <<<")
+            if has_item('phone') and phone_battery > 0:
+                print "+-------------------------------------+"
+                print "Your phone seems to only have decent service in this clearing. You realize this might be your only chance to call for help."
+                call = True
+                while call:
+                    print "+-------------------------------------+"
+                    print "What will you do?"
+                    entry = raw_input("(CALL 911/CALL FRIEND/IGNORE)").lower()
+                    if entry == 'ignore':
+                        break
+                    elif entry == 'call 911' or 'call friend':
+                        print "+-------------------------------------+"
+                        print "You swiftly call for help. You explain the situation, and after some confusion you are informed that a vehicle will arrive soon at the clearing to rescue you."
+                        raw_input(">>> Press enter to continue... <<<")
+                        if entry == 'call 911':
+                            num = randint(3,4)
+                        if entry == 'call friend':
+                            num = randint(2,5)
+                        print "+-------------------------------------+"
+                        print "To be rescued, you must wait at the clearing for " + str(num) + " more turns. Be prepared for Shia LaBeouf to ambush you and try to eat you at any second. You may either ADVANCE your turns as he gets closer, or abandon the call and LEAVE."
+                        print "+-------------------------------------+"
+                        while call:
+                            if num == 0:
+                                #Code for victory
+                                break
+                            entry = raw_input("(ADVANCE/LEAVE)")
+                            if entry == 'advance':
+                                print "+-------------------------------------+"
+                                print "You wait in apprehension..."
+                                
+                                num -= 1
+                                distance -= 110
+                                raw_input(">>> Press enter to continue... <<<")
+                                if distance == 0:
+                                    shia_attack()
+                            elif entry == 'leave':
+                                print "+-------------------------------------+"
+                                print 'You leave the clearing, abandoning hope for rescue...'
+                                raw_input(">>> Press enter to continue... <<<")
+                                print "+-------------------------------------+"
+                                break
+                            else:
+                                print "Error: invalid input. Try again."
+                                
+                    else:
+                        print "Error: invalid input. Try again."
+                    break
+            else:
+                print "+-------------------------------------+"
+                print "This area might have good cell phone reception - come back with a phone well charged and you may be able to call for help."
+                print "+-------------------------------------+"
+                raw_input(">>> Press enter to continue... <<<")
+        ##############################################################
+        if path == 100:
+            print "Fix global var"
+    
+    def free_response():
+        global current_health
+        global phone_battery
+        global max_health
+        global stamina
+        global distance
+        ansr = True
+        while ansr:
+            ###########################################################
+            if distance <= 0:
+                distance = 0
+                print "+-------------------------------------+"
+                print "Shia caught up to you! Prepare to fight him!"
+                raw_input(">>> Press enter to continue... <<<")
+                shia_attack()
+                distance += 100
+            ###########################################################
+            if current_health <= 0:
+                current_health = 0
+                print "+-------------------------------------+"
+                print "You have run out of health. There is blood everywhere."
+                print "Eating all the bodies:"
+                print "Actual Cannibal Shia Labeouf!"
+                explain_death("You ran out of health.")
+                game_over()
+            ###########################################################
+            if phone_battery > 0 and has_item('phone'):
+                phone_battery -= 5
+                if phone_battery < 0:
+                    phone_battery = 0
+                notice(("Phone battery is at " + str(phone_battery) + "%"))
+            ###########################################################
+            
+            
+            print "What will you do next?"
+            ans = raw_input("(FREE RESPONSE)").lower()
+            if ans == 'progress':
+                event_handler()
+            elif ans == 'rest':
+                print "+-------------------------------------+"
+                print "You rest and thus regain a litle health... but he's geting much closer. You can feel it."
+                current_health += 1
+                distance -= 100
+                print "+-------------------------------------+"
+            elif ans == 'check health':
+                display_health(current_health, max_health)
+                distance -= 5
+            elif ans == 'check bag': 
+                display_inventory()
+                distance -= 10
+            elif ans == 'drop item':
+                print "+-------------------------------------+"
+                print "Which item will you drop?"
+                drop = raw_input("([ITEM NAME])")
+                if has_item(drop):
+                    print str(drop) + " (" + str(inventory[drop]) + ") has been dropped."
+                    del(inventory[drop])
+                    print "+-------------------------------------+"
+                else:
+                    print "+-------------------------------------+"
+                    print "Item currently not in stock."
+                    print "+-------------------------------------+"
+                distance -= 5
+            elif ans == 'scout':
+                distance -= 15
+                display_distance()
+            elif ans == 'sprint':
+                if stamina == 'full' and current_health > 2:
+                    print "+-------------------------------------+"
+                    print "You hear Shia's grunting, and you begin to hear 'JUST DO IT!' - You give it your all. You have gained some ground on Shia LaBeouf."
+                    distance += 140
+                    current_health -= 1
+                    stamina = 'empty'
+                    print "+-------------------------------------+"
+                    raw_input(">>> Press enter to continue... <<<")
+                    event_handler()
+                elif current_health <= 2:
+                    print "+-------------------------------------+"
+                    print "Sprinting with your current health level will make you faint. Try again when you regain some health."
+                    print "+-------------------------------------+"
+                else:
+                    print "+-------------------------------------+"
+                    print "Unfortunately, you do not have the stamina to sprint any longer."
+                    print "+-------------------------------------+"
+            elif ans == 'commands':
+                print "+-------------------------------------+"
+                print "Here is your available list of commands when you are alotted the prompt FREE RESPONSE: "
+                print ""
+                print "(1) PROGRESS: type 'PROGRESS' to progress the game's story and move to a new location."
+                print "(2) CHECK HEALTH: type 'CHECK HEALTH' to display your health status."
+                print "(3) CHECK BAG: type 'CHECK BAG' to display your inventory status."
+                print "(4) DROP ITEM: type 'DROP ITEM' to drop an item from your bag. Drops copies as well."
+                print "(5) REST: type 'REST' to regain some health. Watch out! There is a slight chance Shia LeBouf will catch you."
+                print "(6) SCOUT: type 'SCOUT' to show the distane between you and Shia LaBeouf in meters."
+                print "(7) SPRINT: type 'SPRINT' to start sprinting away. You'll get further from Shia LaBeouf, however, you'll lose some of your health. Moves to new location. One time use only."
+                print "(8) COMMANDS: type 'COMMANDS' to display available FREE RESPONSE commands."
+                print "+-------------------------------------+"
+            else:
+                print "Error: invalid input. Try again."
+                
+            
+    #In the game...
+    
+    #Story, Part 1
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print ". . . . ."
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "NARRATOR: There is a quietness about the night..."
+    raw_input(">>> Press enter to continue... <<<")
+    print "NARRATOR: ...as if it were about to transform."
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "FLASHBACK:"
+    print "He's following you, about 30 feet back"
+    print "He gets down on all fours and breaks into a sprint"
+    print "He's gaining on you"
+    print "Shia LaBeouf."
+    
+    #Choice 1
+    ans3r = True
+    while ans3r:
+        print "+-------------------------------------+"
+        print "What do you do? Fight, or run to your car?"
+        ans3 = raw_input("(FIGHT/CAR)").lower()
+        if ans3 == 'fight':
+            print "+-------------------------------------+"
+            print "You dont have any weapons..."
+            print "You lose by a landslide."
+            raw_input(">>> Press enter to continue... <<<")
+            explain_death("You should have known he's much too strong when you're unarmed.")
+            game_over()
+            break
+        elif ans3 == 'car':
+            break
+        else:
+            print "Error: Invalid Input. Try again."
+    
+    #Story, Part 2
+    print "+-------------------------------------+"
+    print "FLASHBACK: "
+    print "You're looking for your car, but you're all turned around"
+    print "He's almost upon you now"
+    print "and you can see there's blood on his face"
+    print "My god, there's blood everywhere!"
+    print "+-------------------------------------+"
+    raw_input(">>> Press enter to continue... <<<")
+    
+    #Story, Part 3
+    print "+-------------------------------------+"
+    print "FLASHBACK: "
+    print "Running for your life from Shia LaBeouf!"
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "FLASHBACK: "
+    print "You run through the woods from Hollywood superstar Shia LaBeouf. You discover a small dagger in the cold, moist soil. You pick it up."
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    notice("Dagger has been added to your inventory.")
+    add_to_inventory('dagger', 1)
+    raw_input(">>> Press enter to continue... <<<")
+    
+    #Story, Part 4
+    print "+-------------------------------------+"
+    print "FLASHBACK: "
+    print "Shia LaBeouf is about to attack. It is unavoidable! You must fight Shia Lebouf!"
+    print "+-------------------------------------+"
+    raw_input(">>> Press enter to continue... <<<")
+    notice("Your health status will be displayed.")
+    display_health(current_health, max_health)
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "FLASHBACK: "
+    print "He's brandishing a knife: Shia LaBeouf! You cannot defeat him. However, you can flee. Will you use your only dagger before fleeing?"
+    
+    #Choice 2
+    ans4r = True
+    while ans4r:
+        print "+-------------------------------------+"
+        ans4 = raw_input("(YES/NO)").lower()
+        if ans4 == 'yes':
+            print "+-------------------------------------+"
+            print "FLASHBACK: "
+            print "You counter Shia, surprising him as the dagger sticks into his six-pack abdomen. This gives you enough time to flee, while sustaining only a little damage."
+            print "+-------------------------------------+"
+            current_health -= 1
+            remove_from_inventory('dagger', 1)
+            break
+        elif ans4 == 'no':
+            print "+-------------------------------------+"
+            print "FLASHBACK: "
+            print "You decide not to use your only dagger. You keep it, and dart out of view after Shia slashes you with his rusty knife. You took devasating damage."
+            print "+-------------------------------------+"
+            current_health -= 3
+            break
+        else:
+            print "Error: invalid input. Try again."
+            
+    #Story, Part 5
+    raw_input(">>> Press enter to continue... <<<")
+    print "+-------------------------------------+"
+    print "Lurking in the shadows..."
+    print "Hollywood superstar Shia LaBeouf!"
+    print "+-------------------------------------+"
+    raw_input(">>> Press enter to continue... <<<")
+    print "Living in the woods: Shia LaBeouf"
+    print "Killing for sport: Shia LaBeouf"
+    print "Eating all the bodies"
+    print "Actual Cannibal Shia LaBeouf"
+    print "+-------------------------------------+"
+    raw_input(">>> Press enter to continue... <<<")
+    print "Now it's dark and you seem to have lost him"
+    print "But you're hopelessly lost yourself"
+    print "Stranded with a murderer"
+    print "You creep silently through the underbrush"
+    print "+-------------------------------------+"
+    raw_input(">>> Press enter to continue... <<<")
+    print "You may now use FREE RESPONSE commands to perform tasks. Remember - you may enter COMMANDS in FREE RESPONSE to view your available commands."
+    print "+-------------------------------------+"
+    free_response()
